@@ -1,15 +1,15 @@
-from debian:bookworm
+FROM debian:bookworm
 
-expose 3306
+EXPOSE 3306
 
-run apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	mariadb-server && \
 	rm -rf /var/lib/apt/lists/* && \
 	apt-get clean
 
-run mkdir /run/mysqld && chown -R mysql:mysql /run/mysqld
+RUN mkdir /run/mysqld && chown -R mysql:mysql /run/mysqld
 
-copy ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-copy --chmod=755 ./tools/mdb-entrypoint.sh /usr/local/bin/
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY --chmod=755 ./tools/mdb-entrypoint.sh /usr/local/bin/
 
-cmd ["mdb-entrypoint.sh"]
+CMD ["mdb-entrypoint.sh"]
