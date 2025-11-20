@@ -1,0 +1,20 @@
+services:
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+    image: mariadb:v1
+    container_name: mariadbc
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+    secrets:
+      - db_root_password
+      - db_password
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
