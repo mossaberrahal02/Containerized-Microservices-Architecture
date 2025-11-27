@@ -6,31 +6,31 @@ mkdir -p /var/www/html && chown -R www-data:www-data /var/www/html
 cd /var/www/html
 
 if [ ! -f wp-settings.php ]; then
-    echo ">>>>>>>>>>>>>>Downloading WordPress..."
+    echo "Downloading WordPress..."
     wp core download --allow-root
 else
-    echo ">>>>>>>>>>>>>>WordPress Already Downloaded!"
+    echo "WordPress Already Downloaded!"
 fi
 
 if [ ! -f wp-config.php ]; then
-	echo ">>>>>>>>>>>>>>Copying wp-config.php..."
+	echo "Copying wp-config.php..."
 	mv /tmp/wp-config.php /var/www/html/wp-config.php
 else
-	echo ">>>>>>>>>>>>>>wp-config.php Present"
+	echo "wp-config.php Present"
 fi
 
 chown -R www-data:www-data /var/www/html/*
 
-echo ">>>>>>>>>>>>>>Waiting for mariadb..."
+echo "Waiting for mariadb..."
 DB_PASS=$(cat ${DB_PASSWORD_FILE})
 while ! mysqladmin ping -h "${DB_HOST}" -u "${DB_USER}" -p"${DB_PASS}" --silent; do
-	echo ">>>>>>>>>>>>>>Database is unavailable - sleeping..."
+	echo "Database is unavailable - sleeping..."
 	sleep 2
 done
 
 WP_ADMIN_PASS=$(cat ${WP_ADMIN_PASSWORD_FILE})
 if ! wp core is-installed --allow-root; then
-	echo ">>>>>>>>>>>>>>Installing Wordpress..."
+	echo "Installing Wordpress..."
 
 	wp core install \
         --url="https://merrahal.42.fr" \
@@ -41,45 +41,20 @@ if ! wp core is-installed --allow-root; then
         --skip-email --allow-root
 
 else
-	echo ">>>>>>>>>>>>>>Wordpress Already Installed!"
+	echo "Wordpress Already Installed!"
 fi
 
 WP_USER_PASS=$(cat ${WP_USER_PASSWORD_FILE})
 if ! wp user get "${WP_USER}" --field=ID --allow-root > /dev/null 2>&1; then
-	echo ">>>>>>>>>>>>>>Create new user..."
+	echo "Create new user..."
 	wp user create "${WP_USER}" "${WP_USER_EMAIL}" \
 		--role=${WP_ROLE} --user_pass="${WP_USER_PASS}" --allow-root
 else
-	echo ">>>>>>>>>>>>>>User already Created!"
+	echo "User already Created!"
 fi
 
-echo ">>>>>>>>>>>>>>Setting proper permissions..."
+echo "Setting proper permissions..."
 find /var/www/html -type d -exec chmod 775 {} \;
 find /var/www/html -type f -exec chmod 644 {} \;
-
-#redis setup#############
-REDIS_PASSWORD=$(cat ${REDIS_PASSWORD_FILE})
-echo ">>>>>>>>>>Waiting for Redis..."
-while ! redis-cli -h redis -p 6379 <<EOF | grep -q PONG
-AUTH ${REDIS_PASSWORD}
-PING
-EOF
-do
-    sleep 1
-done
-
-if ! wp plugin is-installed redis-cache --allow-root; then
-	echo ">>>>>>>>>>>>Installing Redis Object Cache plugin..."
-	wp plugin install redis-cache --activate --allow-root
-	wp redis enable --allow-root
-else
-	echo ">>>>>>>>>>>>Redis Object Cache plugin is already installed."
-	if ! wp plugin is-active redis-cache --allow-root; then
-		echo ">>>>>>>>>>>Activate Redis Object Cache plugin..."
-		wp plugin activate redis-cache --allow-root
-		wp redis enable --allow-root
-	fi
-fi
-##########################
 
 exec php-fpm8.2 -F

@@ -2,7 +2,7 @@ services:
   mariadb:
     build:
       context: ./requirements/mariadb
-    image: mariadb:v1
+    image: mariadb
     container_name: mariadbc
     environment:
       - DB_NAME=${DB_NAME}
