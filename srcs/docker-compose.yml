@@ -47,7 +47,29 @@ services:
     volumes:
       - /home/merrahal/data/web:/var/www/html
     init: true
-
+  nginx:
+    build:
+      context: ./requirements/nginx/
+      args:
+        COUNTRY: ${COUNTRY}
+        STATE: ${STATE}
+        LOCALITY: ${LOCALITY}
+        ORGANIZATION: ${ORGANIZATION}
+        UNIT: ${UNIT}
+        COMMON_NAME: ${COMMON_NAME}
+    image: nginx:v0
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - wordpress
+    ports:
+      - "443:443"
+    volumes:
+      - /home/merrahal/data/web:/var/www/html
+    networks:
+      inception:
+    init: true
 
 secrets:
   db_password:
