@@ -24,19 +24,14 @@ echo ">>>>>>>>> $DB_ROOT_PASSWORD"
 
 MARIADB_DAEMON="mariadbd"
 
-SOCKET="/run/mysqld/mysqld.sock"
+SOCKET="/tmp/mysqld.sock"
 
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
 chown -R mysql:mysql /var/lib/mysql
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
-    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Initializing MySQL data directory..."
-    mariadb-install-db --user=mysql --datadir=/var/lib/mysql
-fi
-
 echo ">>>>>>>>> Start MariaDB in background"
-$MARIADB_DAEMON --user=mysql --skip-networking --socket=$SOCKET &
+$MARIADB_DAEMON --user=root --skip-networking --socket=$SOCKET &
 MYSQL_PID=$!
 
 echo ">>>>>>>>> Waiting for MariaDB to be ready..."
@@ -50,6 +45,7 @@ done
 
 echo ">>>>>>>>> MariaDB is up!"
 
+# If the server is down or unreachable, the command will silently fail and return a non-zero exit status.
 MARIADB="mariadb -u root --socket=$SOCKET"
 if mysqladmin --socket=$SOCKET ping --silent >/dev/null 2>&1; then
 	MARIADB="mariadb -u root -p${DB_ROOT_PASSWORD} --socket=${SOCKET}"
@@ -71,4 +67,4 @@ mysqladmin --socket=$SOCKET -uroot -p"${DB_ROOT_PASSWORD}" shutdown
 wait $MYSQL_PID
 
 echo ">>>>>>>>> Starting MariaDB server..."
-exec $MARIADB_DAEMON --user=mysql
+exec $MARIADB_DAEMON --user=root
