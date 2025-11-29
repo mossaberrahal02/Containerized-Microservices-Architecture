@@ -14,7 +14,6 @@ services:
       - db_data:/var/lib/mysql
     networks:
       inception:
-
   wordpress:
     build:
       context: ./requirements/wordpress/
@@ -70,6 +69,44 @@ services:
     networks:
       inception:
     init: true
+  adminer:
+    build:
+      context:
+        ./requirements/bonus/adminer
+    image: adminer:v0
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      inception:
+    init: true
+  static:
+    build:
+      context: ./requirements/bonus/static
+    image: static:v0
+    container_name: static
+    restart: unless-stopped
+    ports:
+      - "7070:7070"
+    init: true
+  cadvisor:
+    build:
+      context: ./requirements/bonus/cadvisor
+    image: cadvisor:v0
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "9090:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/snap/docker/common/var-lib-docker:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    init: true
+    networks:
+      inception:
 
 secrets:
   db_password:
