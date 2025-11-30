@@ -5,31 +5,31 @@ COMPOSE_FILE = srcs/docker-compose.yml
 all: up
 
 up:
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker compose -f $(COMPOSE_FILE) up -d
 
 buildup:
-	docker-compose -f $(COMPOSE_FILE) up --build -d
+	docker compose -f $(COMPOSE_FILE) up --build -d
 
 build:
-	docker-compose -f $(COMPOSE_FILE) build
+	docker compose -f $(COMPOSE_FILE) build
 
 start:
-	docker-compose -f $(COMPOSE_FILE) start
+	docker compose -f $(COMPOSE_FILE) start
 
 stop:
-	docker-compose -f $(COMPOSE_FILE) stop
+	docker compose -f $(COMPOSE_FILE) stop
 
 down:
-	docker-compose -f $(COMPOSE_FILE) down
+	docker compose -f $(COMPOSE_FILE) down
 
 clean:
-	docker-compose -f $(COMPOSE_FILE) down --rmi all --remove-orphans
+	docker compose -f $(COMPOSE_FILE) down --rmi all --remove-orphans
 	docker builder prune --all -f
 
 re: clean all
 
 ps:
-	docker-compose -f $(COMPOSE_FILE) ps -a
+	docker compose -f $(COMPOSE_FILE) ps -a
 
 logs:
-	docker-compose -f $(COMPOSE_FILE) logs
+	docker compose -f $(COMPOSE_FILE) logs
