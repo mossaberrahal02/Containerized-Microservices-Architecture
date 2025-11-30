@@ -3,25 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Mossab Errahal</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
             margin: 0;
-            background-color: #f5f5f5;
+            padding: 0;
+            box-sizing: border-box;
         }
-
+        body {
+            font-family: monospace;
+            line-height: 1.6;
+            padding: 40px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            color: whitesmoke;
+            background: #003566;
+        }
         h1 {
-            font-size: 2rem;
-            color: #333;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        h2 {
+            font-size: 18px;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+        }
+        p {
+            margin-bottom: 12px;
+        }
+        nav {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        nav li {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        nav li:hover {
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <nav>
+        <ul>
+            <li id="about">about</li>
+            <li id="projects">projects</li>
+            <li id="contact">contact</li>
+        </ul>
+    </nav>
+    <h1>Mossab Errahal</h1>
+    <p>1337 Student</p>
+
+    <h2>Inception</h2>
+    <p>
+        Inception is a system administration project that involves setting up a small infrastructure 
+        composed of different services using Docker. The project consists of creating a multi-container 
+        application with NGINX, WordPress, and MariaDB, each running in its own container. 
+        All services are orchestrated using Docker Compose and run in a custom Docker network. 
+        The infrastructure follows security best practices, including the use of environment variables 
+        for sensitive data and volumes for data persistence.
+    </p>
 </body>
 </html>
