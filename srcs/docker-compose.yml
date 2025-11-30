@@ -44,7 +44,7 @@ services:
     networks:
       inception:
     volumes:
-      - /home/merrahal/data/web:/var/www/html
+      - web:/var/www/html
     init: true
   nginx:
     build:
@@ -65,7 +65,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/merrahal/data/web:/var/www/html
+      - web:/var/www/html
     networks:
       inception:
     init: true
@@ -125,6 +125,12 @@ volumes:
       type: none
       o: bind
       device: /home/merrahal/data/mariadb
-
+  web:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/merrahal/data/web
+  
 networks:
   inception:
